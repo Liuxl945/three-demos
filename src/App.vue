@@ -3,13 +3,24 @@
         <div id="nav">
             <router-link to="/">Home</router-link>|
             <router-link to="/css2d_label">css2d_label</router-link>
-            <router-link to="/css2d_label">css2d_label</router-link>
+            <router-link to="/css3d_orthographic">css3d_orthographic</router-link>
+            <router-link to="/css3d_panorama">css3d_panorama</router-link>
         </div>
         <router-view />
     </div>
 </template>
 
 <style lang="scss">
+#nav{
+	position: fixed;
+	left: 0;
+	top: 0;
+	right: 0;
+	height: 40px;
+	line-height: 40px;
+	z-index: 10000;
+	background: #000000;
+}
 body {
 	margin: 0;
 	background-color: #000;
