@@ -34,6 +34,11 @@ const routes = [
     path: '/css3d_periodictable',
     name: 'css3d_periodictable',
     component: () => import( /* webpackChunkName: "about" */ '../views/css3d_periodictable.vue')
+},
+{
+    path: '/misc_controls_drag',
+    name: 'misc_controls_drag',
+    component: () => import( /* webpackChunkName: "about" */ '../views/misc_controls_drag.vue')
 }
 ]
 
