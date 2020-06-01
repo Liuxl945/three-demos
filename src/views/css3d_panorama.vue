@@ -18,6 +18,7 @@ export default {
             lat: 0,
             phi: 0,
             theta: 0,
+            image: undefined,
             touchX: undefined,
             touchY: undefined
         }
@@ -28,52 +29,10 @@ export default {
     },
     methods: {
         init() {
-            this.camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000)
+            this.camera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 1, 1000)
             this.scene = new THREE.Scene()
 
             const sides = [
-                // {
-                //     url: require("@/views/1.jpg"),
-                //     position: [ - 512, 0, 0 ],
-                //     rotation: [ 0, Math.PI / 2, 0 ]
-                // },
-                // {
-                //     url: require("@/views/2.jpg"),
-                //     position: [ 512, 0, 0 ],
-                //     rotation: [ 0, - Math.PI / 2, 0 ]
-                // },
-                // {
-                //     url: require("@/views/3.jpg"),
-                //     position: [ 0, 512, 0 ],
-                //     rotation: [ Math.PI / 2, 0, Math.PI ]
-                // },
-                // {
-                //     url: require("@/views/4.jpg"),
-                //     position: [ 0, - 512, 0 ],
-                //     rotation: [ - Math.PI / 2, 0, Math.PI ]
-                // },
-                // {
-                //     url: require("@/views/5.jpg"),
-                //     position: [ 0, 0, 512 ],
-                //     rotation: [ 0, Math.PI, 0 ]
-                // },
-                // {
-                //     url: require("@/views/6.jpg"),
-                //     position: [ 0, 0, - 512 ],
-                //     rotation: [ 0, 0, 0 ]
-                // },
-
-                // {
-                //     url: require("@/views/7.jpg"),
-                //     position: [ 0, -256, - 512],
-                //     rotation: [ 0, 0, 0 ]
-                // },
-                // {
-                //     url: require("@/views/8.png"),
-                //     position: [ 0, 256, - 512 ],
-                //     rotation: [ 0, 0, 0 ]
-                // },
-
                 {
                     url: require("@/textures/cube/Bridge2/posx.jpg"),
                     position: [ - 512, 0, 0 ],
@@ -117,11 +76,25 @@ export default {
                 this.scene.add( object )
             })
 
+            let element = document.createElement( 'img' )
+            element.id = "timg"
+            // element.width = 1026; // 2 pixels extra to close the gap.
+            element.src = require("@/views/timg.jpg")
+            
+            this.image = new CSS3DObject(element)
+            this.image.position.fromArray([-512, 0, 0])
+            this.image.rotation.fromArray([0, Math.PI / 2, 0 ])
+            this.scene.add( this.image )
+
+
+
+
             this.renderer = new CSS3DRenderer()
             this.renderer.setSize( window.innerWidth, window.innerHeight )
             document.querySelector("#css3d_panorama").appendChild( this.renderer.domElement )
 
             document.addEventListener( 'mousedown', this.onDocumentMouseDown, false )
+            document.addEventListener( 'click', this.onclick, false )
             document.addEventListener( 'wheel', this.onDocumentMouseWheel, false )
             document.addEventListener( 'touchstart', this.onDocumentTouchStart, { passive: false } )
             document.addEventListener( 'touchmove', this.onDocumentTouchMove, { passive: false } )
@@ -133,9 +106,58 @@ export default {
 
             this.renderer.setSize( window.innerWidth, window.innerHeight )
         },
+        sleep(){
+            return new Promise((resolve,reject) => {
+                setTimeout(() => {
+                    resolve()
+                }, 10)
+            })
+        },
+        async onclick(event){
+            event.preventDefault()
+            if(event.target.id === "timg"){
+
+                const Y = 0
+                const X = 90
+                const F = 45
+                
+                let lonMax = Math.max(Y,this.lon)
+                let lonMin = Math.min(Y,this.lon)
+                let latMax = Math.max(X,this.lat)
+                let latMin = Math.min(X,this.lat)
+                
+                this.scene.remove(this.image)
+
+                // 120 => 151 -7 => 90
+                
+                let lonMinus =  lonMax - lonMin 
+                let latMinus =  latMax - latMin 
+                let min = Math.min(lonMinus,latMinus)
+                let max = Math.max(lonMinus,latMinus)
+
+                
+                
+                for(let i = 0; i < Math.min(lonMinus,latMinus); i++){
+                    let fov = this.camera.fov
+
+                    await this.sleep()
+                    this.lon += this.lon < Y ? 1 : -1
+                    this.lat += this.lat < X ? latMinus / lonMinus : -(latMinus / lonMinus)
+                    
+                    fov += fov < F ? Math.max(fov,F) / Math.min(fov,F) : -(Math.max(fov,F) / Math.min(fov,F))
+
+                    // 视野广度
+                    this.camera.fov = THREE.MathUtils.clamp( fov, 10, 90 )
+                    this.camera.updateProjectionMatrix()
+                }
+            }else{
+                this.scene.add(this.image)
+            }
+            
+            console.log(this.camera)
+        },
         onDocumentMouseDown(event) {
             event.preventDefault()
-
             document.addEventListener( 'mousemove', this.onDocumentMouseMove, false )
             document.addEventListener( 'mouseup', this.onDocumentMouseUp, false )
         },
@@ -154,8 +176,7 @@ export default {
             
             var fov = this.camera.fov + event.deltaY * 0.05
 
-            this.camera.fov = THREE.MathUtils.clamp( fov, 10, 75 )
-
+            this.camera.fov = THREE.MathUtils.clamp( fov, 10, 90 )
             this.camera.updateProjectionMatrix()
         },
         onDocumentTouchStart(event) {
@@ -192,7 +213,8 @@ export default {
             this.camera.lookAt( this.target )
             
             this.renderer.render(this.scene, this.camera)
-        }
+
+        }   
     }
 }
 </script>

@@ -145,6 +145,7 @@ export default {
 
                 let intersections = this.raycaster.intersectObjects( this.objects, true )
 
+
                 if ( intersections.length > 0 ) {
 
                     let object = intersections[ 0 ].object
