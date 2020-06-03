@@ -200,6 +200,7 @@ export default {
         },
 
 
+
         animate() {
             requestAnimationFrame( this.animate )
 

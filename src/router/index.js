@@ -39,6 +39,11 @@ const routes = [
     path: '/misc_controls_drag',
     name: 'misc_controls_drag',
     component: () => import( /* webpackChunkName: "about" */ '../views/misc_controls_drag.vue')
+},
+{
+    path: '/vr',
+    name: 'vr',
+    component: () => import( /* webpackChunkName: "about" */ '../views/vr.vue')
 }
 ]
 
