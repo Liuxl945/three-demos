@@ -44,6 +44,11 @@ const routes = [
     path: '/vr',
     name: 'vr',
     component: () => import( /* webpackChunkName: "about" */ '../views/vr.vue')
+},
+{
+    path: '/fash_ice',
+    name: 'fash_ice',
+    component: () => import( /* webpackChunkName: "about" */ '../views/fash_ice.vue')
 }
 ]
 

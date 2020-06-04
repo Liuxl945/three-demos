@@ -13,6 +13,16 @@ export default {
         // 创建场景对象Scene
         var scene = new THREE.Scene()
 
+        scene.background = new THREE.CubeTextureLoader()
+        .load( [ 
+            require("@/textures/cube/Park3Med/px.jpg"), 
+            require("@/textures/cube/Park3Med/nx.jpg"), 
+            require("@/textures/cube/Park3Med/py.jpg"), 
+            require("@/textures/cube/Park3Med/ny.jpg"), 
+            require("@/textures/cube/Park3Med/pz.jpg"), 
+            require("@/textures/cube/Park3Med/nz.jpg")
+        ] );
+
         // 创建网格模型
         var geometry = new THREE.BoxGeometry(100, 100, 100); //创建一个立方体几何对象Geometry
         // 球体 参数：半径60  经纬度细分数40,40

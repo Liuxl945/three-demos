@@ -31,7 +31,7 @@ export default {
     },
     methods: {
         init() {
-            this.camera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 1, 1000)
+            this.camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 1000)
             this.scene = new THREE.Scene()
 
             const sides = [
@@ -276,7 +276,7 @@ export default {
             
             var fov = this.camera.fov + event.deltaY * 0.05
 
-            this.camera.fov = THREE.MathUtils.clamp( fov, 10, 90 )
+            this.camera.fov = THREE.MathUtils.clamp( fov, 10, 70 )
             this.camera.updateProjectionMatrix()
         },
         onDocumentTouchStart(event) {
