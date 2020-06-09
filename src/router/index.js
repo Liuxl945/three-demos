@@ -49,6 +49,16 @@ const routes = [
     path: '/fash_ice',
     name: 'fash_ice',
     component: () => import( /* webpackChunkName: "about" */ '../views/fash_ice.vue')
+},
+{
+    path: '/index',
+    name: 'index',
+    component: () => import( /* webpackChunkName: "about" */ '../views/index.vue')
+},
+{
+    path: '/photo',
+    name: 'photo',
+    component: () => import( /* webpackChunkName: "about" */ '../views/photo.vue')
 }
 ]
 
