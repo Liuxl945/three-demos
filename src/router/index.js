@@ -64,11 +64,26 @@ const routes = [
     path: '/a_frame',
     name: 'a_frame',
     component: () => import( /* webpackChunkName: "about" */ '../views/a_frame.vue')
+},
+{
+    path: '/misc_controls_pointerlock',
+    name: 'misc_controls_pointerlock',
+    component: () => import( /* webpackChunkName: "about" */ '../views/misc_controls_pointerlock.vue')
+},
+{
+    path: '/misc_exporter_collada',
+    name: 'misc_exporter_collada',
+    component: () => import( /* webpackChunkName: "about" */ '../views/misc_exporter_collada.vue')
+},
+{
+    path: '/misc_exporter_draco',
+    name: 'misc_exporter_draco',
+    component: () => import( /* webpackChunkName: "about" */ '../views/misc_exporter_draco.vue')
 }
 ]
 
 const router = new VueRouter({
-    mode: 'history',
+    // mode: 'history',
     base: process.env.BASE_URL,
     routes
 })

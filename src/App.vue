@@ -1,14 +1,24 @@
 <template>
     <div id="app">
         <div id="nav">
-            <router-link to="/">Home</router-link>|
-            <router-link to="/css2d_label">css2d_label</router-link>
-            <router-link to="/css3d_orthographic">css3d_orthographic</router-link>
-            <router-link to="/css3d_panorama">css3d_panorama</router-link>
+            <router-link class="link" :to="item.path" v-for="item in router" :key="item.name">{{item.name}}</router-link>
         </div>
         <router-view />
     </div>
 </template>
+
+<script>
+export default {
+	data() {
+		return {
+			router: []
+		}
+	},
+	mounted() {
+		this.router = this.$router.options.routes
+	}
+}
+</script>
 
 <style lang="scss">
 #nav{
@@ -30,7 +40,9 @@ body {
 	line-height: 24px;
 	overscroll-behavior: none;
 }
-
+.link{
+	margin-right: 10px;
+}
 a {
 	color: #ff0;
 	text-decoration: none;
