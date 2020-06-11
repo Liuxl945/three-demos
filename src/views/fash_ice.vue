@@ -9,6 +9,7 @@
 
 import * as THREE from "three"
 import { CSS3DRenderer, CSS3DObject } from "three/examples/jsm/renderers/CSS3DRenderer"
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
 
 export default {
     data() {
@@ -23,6 +24,8 @@ export default {
             lat: 0,
             phi: 0,
             theta: 0,
+            touchX: undefined,
+            touchY: undefined,
             target: new THREE.Vector3(),
         }
     },
@@ -32,45 +35,60 @@ export default {
     },
     methods: {
         init() {
-            this.camera = new THREE.PerspectiveCamera( 80, window.innerWidth / window.innerHeight, 1, 1000)
-            
+            this.camera = new THREE.PerspectiveCamera( 80, window.innerWidth / window.innerHeight, 0.1, 1000)
+            this.camera.position.z = 0.1
 
             this.scene = new THREE.Scene()
-            this.geometry = new THREE.SphereGeometry( 500, 60, 60 )
-            this.geometry.scale( - 1, 1, 1 )
-
-            this.sushe_low = new THREE.MeshBasicMaterial( {
-                map: new THREE.TextureLoader().load( require("@/views/sushe.jpg"))
+            var box = new THREE.BoxGeometry(20, 20, 20)
+            // 6张全景图的名称
+            let pathArr = [
+                require("@/textures/cube/Park3Med/px.jpg"), 
+                require("@/textures/cube/Park3Med/nx.jpg"), 
+                require("@/textures/cube/Park3Med/py.jpg"), 
+                require("@/textures/cube/Park3Med/ny.jpg"), 
+                require("@/textures/cube/Park3Med/pz.jpg"), 
+                require("@/textures/cube/Park3Med/nz.jpg")
+            ]
+            // 声明一个数组，用来存储六张全景图对应的纹理对象Texture
+            let materialArr = []
+            pathArr.forEach(elem => {
+                var textureLoader = new THREE.TextureLoader()
+                var texture = textureLoader.load(elem)
+                var material = new THREE.MeshBasicMaterial({
+                    map:texture,
+                    side:THREE.BackSide,
+                });
+                materialArr.push(material)
             })
 
-            // let geometry2 = new THREE.SphereGeometry( 500, 40, 40 )
+            // var geometry = new THREE.PlaneBufferGeometry( 5, 5, 5 );
 
-            
+            // var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+            // var cube = new THREE.Mesh( geometry, material );
+            // cube.position.x = -10
+            // this.scene.add( cube );
 
 
-            this.mesh = new THREE.Mesh( this.geometry, this.sushe_low )
 
-            let moonDiv = document.createElement("div")
-            moonDiv.className = "label"
-            moonDiv.textContent = "Moon"
-            moonDiv.style.marginTop = "-1em"
-            let moonLabel = new CSS2DObject(moonDiv)
-            moonLabel.position.set(0, 0.2, 0)
-            this.mesh.add(moonLabel)
+            var mesh = new THREE.Mesh(box, materialArr)
 
-            this.scene.add( this.mesh )
+            this.scene.add(mesh)
 
             this.renderer = new THREE.WebGLRenderer()
-            this.renderer.setPixelRatio( window.devicePixelRatio )
-            this.renderer.setSize( window.innerWidth, window.innerHeight )
+            this.renderer.setSize(window.innerWidth, window.innerHeight);//设置渲染区域尺寸
+            this.renderer.setClearColor(0xb9d3ff, 1); //设置背景颜色
 
-            document.querySelector("#fash_ice").appendChild( this.renderer.domElement )
+            document.querySelector("#fash_ice").appendChild(this.renderer.domElement); //body元素中插入canvas对象
+            
 
+            // var controls = new OrbitControls(this.camera,this.renderer.domElement);//创建控件对象
+            
             document.addEventListener( 'mousedown', this.onDocumentMouseDown, false )
             document.addEventListener( 'wheel', this.onDocumentMouseWheel, false )
             document.addEventListener( 'touchstart', this.onDocumentTouchStart, { passive: false } )
             document.addEventListener( 'touchmove', this.onDocumentTouchMove, { passive: false } )
             window.addEventListener( 'resize', this.onWindowResize, false )
+            
         },
         onWindowResize() {
             this.camera.aspect = window.innerWidth / window.innerHeight
@@ -95,16 +113,14 @@ export default {
             document.removeEventListener( 'mouseup', this.onDocumentMouseUp )
         },
         onDocumentMouseWheel(event) {
-            
-            var fov = this.camera.fov + event.deltaY * 0.05
 
-            this.camera.fov = THREE.MathUtils.clamp( fov, 10, 90 )
+            var fov = this.camera.fov + event.deltaY * 0.05
+            
+            this.camera.fov = THREE.MathUtils.clamp( fov, 10, 80 )
             this.camera.updateProjectionMatrix()
         },
         onDocumentTouchStart(event) {
             event.preventDefault()
-            this.changeClState(event)// 控制窗帘的状态
-
             let touch = event.touches[ 0 ]
 
             this.touchX = touch.screenX
@@ -123,7 +139,8 @@ export default {
         },
 
         animate() {
-            requestAnimationFrame(this.animate)
+            requestAnimationFrame( this.animate )
+            // this.lon += 0.1
             this.lat = Math.max( - 85, Math.min( 85, this.lat ) )
             this.phi = THREE.MathUtils.degToRad( 90 - this.lat )
             this.theta = THREE.MathUtils.degToRad( this.lon )
@@ -131,7 +148,7 @@ export default {
             this.target.y = Math.cos( this.phi )
             this.target.z = Math.sin( this.phi ) * Math.sin( this.theta )
             this.camera.lookAt( this.target )
-            this.renderer.render( this.scene, this.camera )
+            this.renderer.render(this.scene,this.camera)
         }
     }
 }
