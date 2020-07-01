@@ -53,12 +53,12 @@ export default {
             grid.position.y = - 75
             scene.add( grid )
 
-            // let geometry = new THREE.TorusKnotBufferGeometry( 50, 15, 200, 30 )
-            // let material = new THREE.MeshPhongMaterial( { color: 0x00ff00 } )
-            // mesh = new THREE.Mesh( geometry, material )
-            // mesh.castShadow = true
-            // mesh.position.y = 25
-            // scene.add( mesh )
+            let geometry = new THREE.TorusKnotBufferGeometry( 50, 15, 200, 30 )
+            let material = new THREE.MeshPhongMaterial( { color: 0x00ff00 } )
+            mesh = new THREE.Mesh( geometry, material )
+            mesh.castShadow = true
+            mesh.position.y = 25
+            scene.add( mesh )
 
             renderer = new THREE.WebGLRenderer( { antialias: true } )
             renderer.setPixelRatio( window.devicePixelRatio )
@@ -70,7 +70,7 @@ export default {
             controls.target.set( 0, 25, 0 )
             controls.update()
 
-            window.addEventListener( 'resize', onWindowResize, false )
+            window.addEventListener( 'resize', this.onWindowResize, false )
         },
         onWindowResize() {
             camera.aspect = window.innerWidth / window.innerHeight

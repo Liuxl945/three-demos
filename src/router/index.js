@@ -79,6 +79,11 @@ const routes = [
     path: '/misc_exporter_draco',
     name: 'misc_exporter_draco',
     component: () => import( /* webpackChunkName: "about" */ '../views/misc_exporter_draco.vue')
+},
+{
+    path: '/raycaster',
+    name: 'raycaster',
+    component: () => import( /* webpackChunkName: "about" */ '../views/raycaster.vue')
 }
 ]
 

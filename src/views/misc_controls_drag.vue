@@ -130,22 +130,23 @@ export default {
         },
 
         onClick( event ) {
-
+            
             event.preventDefault()
 
             if ( this.enableSelection === true ) {
-
+                
+                
                 let draggableObjects = this.controls.getObjects()
                 draggableObjects.length = 0
-
+                
                 this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1
                 this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1
-
+                console.log(11)
                 this.raycaster.setFromCamera( this.mouse, this.camera )
 
                 let intersections = this.raycaster.intersectObjects( this.objects, true )
 
-
+                console.log(intersections)
                 if ( intersections.length > 0 ) {
 
                     let object = intersections[ 0 ].object
